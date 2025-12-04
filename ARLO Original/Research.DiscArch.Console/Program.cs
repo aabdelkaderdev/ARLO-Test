@@ -2,6 +2,7 @@
 using Research.DiscArch.Console;
 using Research.DiscArch.Designer;
 using Research.DiscArch.Models;
+using Research.DiscArch.TestData;
 
 //var experiment = new OprimizationExperiment();
 //experiment.Run();
@@ -9,14 +10,19 @@ using Research.DiscArch.Models;
 //var experiment = new CategorizedReqsExperiment();
 //experiment.Run(Research.DiscArch.TestData.SystemNames.Messaging);
 
+// Interactive requirements file selection
+var selectedFile = ResourceManager.SelectRequirementsFile();
+Console.WriteLine();
+
 var experimentSettings = new ExperimentSettings
 {
-    System = SystemNames.SpringXd,
+    System = SystemNames.SpringXd, // Default system, but requirements will be loaded from selected file
     OptimizationStrategy = Enum.GetName(OptimizerMode.ILP),
     QualityWeightsMode = Enum.GetName(QualityWeightsMode.Inferred),
     LoadReqsFromFile = true,
     LoadConditionGroupsFromFile = false,
-    MatrixPath = "quality_archipattern_matrix_bal.csv"
+    MatrixPath = "quality_archipattern_matrix_bal.csv",
+    SelectedRequirementsFile = selectedFile // New property for the selected file
 };
 
 //var experiment = new CategorizedReqsExperiment(experimentSettings);

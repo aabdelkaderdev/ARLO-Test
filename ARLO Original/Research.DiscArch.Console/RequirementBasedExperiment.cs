@@ -20,7 +20,18 @@ namespace Research.DiscArch.Console
         protected async Task LoadRequirements()
         {
             reportingService.Writeline($"Date/Time: {DateTime.Now}");
-            var requirements = ResourceManager.LoadRequirments(experimentSettings.System);
+            
+            // Use the selected requirements file if provided, otherwise fall back to system-based loading
+            string requirements;
+            if (!string.IsNullOrEmpty(experimentSettings.SelectedRequirementsFile))
+            {
+                requirements = ResourceManager.LoadRequirementsFromFile(experimentSettings.SelectedRequirementsFile);
+                reportingService.Writeline($"Loaded requirements from: {experimentSettings.SelectedRequirementsFile}");
+            }
+            else
+            {
+                requirements = ResourceManager.LoadRequirments(experimentSettings.System);
+            }
 
             reportingService.Writeline();
             reportingService.Writeline($"Settings:\n" +

@@ -58,6 +58,7 @@
         public RemovalStrategy RemovalStratgy { get; set; } = new();
         public bool UseOnlyFirstSatisfiableGroup { get; set; }
         public string MatrixPath { get; set; }
+        public string SelectedRequirementsFile { get; set; }
 
         public string ExpermentName => $"{Enum.GetName(ExperimentKind)}-{Enum.GetName(System)}";
 
