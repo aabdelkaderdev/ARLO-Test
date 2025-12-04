@@ -84,6 +84,7 @@ public class ResourceManager
             SystemNames.Mule => LoadFromTextFile("Mule.txt"),
             SystemNames.Aptana => LoadFromTextFile("aptana.txt"),
             SystemNames.SpringXd => LoadFromTextFile("springxd.txt"),
+            SystemNames.SmallMessagingSystem => LoadFromTextFile("SmallMessagingSystem.txt"),
             _ => throw new Exception("System not found"),
         };
     }

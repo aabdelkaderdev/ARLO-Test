@@ -100,6 +100,7 @@ public class GptService
         throw new Exception("Error calling DeepSeek Chat API: Too many requests");
     }
 
+    [Obsolete("DeepSeek does not currently provide an embeddings API. This method will throw NotSupportedException.")]
     public async Task<List<List<double>>> GetEmbeddings(List<string> conditions)
     {
         // Note: DeepSeek does not currently provide an embeddings API.
