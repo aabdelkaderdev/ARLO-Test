@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Research.DiscArch.Services;
 
-public class OpenAIEmbedding
+public class DeepSeekEmbedding
 {
     [JsonProperty("model")]
     public string Model { get; set; }
@@ -28,7 +28,7 @@ public class Choice
     public ChatMessage Data { get; set; }
 }
 
-public class OpenAIEmbeddingResponse
+public class DeepSeekEmbeddingResponse
 {
     [JsonProperty("data")]
     public List<EmbeddingData> Data { get; set; }
@@ -49,7 +49,7 @@ public class GptService
     public GptService()
     {
         client = new HttpClient();
-        apiKey = Environment.GetEnvironmentVariable("GptApiKey");
+        apiKey = Environment.GetEnvironmentVariable("DeepSeekApiKey");
     }
 
     public async Task<string> Call(string instruction, string ask)
@@ -57,12 +57,12 @@ public class GptService
         int delay = 1000;
         int retryCount = 0;
         int maxRetries = 5;
-        string apiUrl = "https://api.openai.com/v1/chat/completions";
+        string apiUrl = "https://api.deepseek.com/chat/completions";
         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
 
         var requestBody = new
         {
-            model = "gpt-4",
+            model = "deepseek-chat",
             messages = new[]
             {
                 new { role = "system", content = instruction },
@@ -92,52 +92,19 @@ public class GptService
             }
             else
             {
-                Console.WriteLine("ChatGTP Error: " + response.ReasonPhrase);
-                throw new Exception("Error calling OpenAI Chat API: " + response.ReasonPhrase);
+                Console.WriteLine("DeepSeek Error: " + response.ReasonPhrase);
+                throw new Exception("Error calling DeepSeek Chat API: " + response.ReasonPhrase);
             }
         }
 
-        throw new Exception("Error calling OpenAI Chat API: Too many requests");
+        throw new Exception("Error calling DeepSeek Chat API: Too many requests");
     }
 
     public async Task<List<List<double>>> GetEmbeddings(List<string> conditions)
     {
-        var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-
-        int batchSize = 50;  // Adjust the batch size according to your needs and token limits
-        var embeddings = new List<List<double>>();
-
-        for (int i = 0; i < conditions.Count; i += batchSize)
-        {
-            var batch = conditions.Skip(i).Take(batchSize).ToList();
-            var embeddingRequest = new OpenAIEmbedding
-            {
-                Model = "text-embedding-ada-002",
-                Input = batch.ToArray()
-            };
-
-            var content = new StringContent(JsonConvert.SerializeObject(embeddingRequest), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("https://api.openai.com/v1/embeddings", content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorResponse = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Error: {response.StatusCode}, Details: {errorResponse}");
-                throw new Exception ("Could not generate embeddings");
-            }
-            else
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-                var embeddingResponse = JsonConvert.DeserializeObject<OpenAIEmbeddingResponse>(responseString);
-
-                foreach (var data in embeddingResponse.Data)
-                {
-                    embeddings.Add(data.Embedding);
-                }
-            }
-        }
-
-        return embeddings;
+        // Note: DeepSeek does not currently provide an embeddings API.
+        // This method is preserved for compatibility but will throw an exception if called.
+        // Consider using an alternative embeddings provider if this functionality is needed.
+        throw new NotSupportedException("DeepSeek does not currently provide an embeddings API. Consider using an alternative embeddings provider.");
     }
 }

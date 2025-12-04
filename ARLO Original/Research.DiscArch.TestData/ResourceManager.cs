@@ -4,6 +4,72 @@ namespace Research.DiscArch.TestData;
 
 public class ResourceManager
 {
+    // List of available requirements files (file names only, without path)
+    private static readonly string[] RequirementsFiles = new[]
+    {
+        "MessagingReqs.txt",
+        "KaggleReq.txt",
+        "ContradictoryReqs.txt",
+        "AppFlowy.txt",
+        "MLonBL.txt",
+        "OfficerDispatcher.txt",
+        "Bamboo.txt",
+        "Mule.txt",
+        "aptana.txt",
+        "springxd.txt",
+        "SmallMessagingSystem.txt"
+    };
+
+    /// <summary>
+    /// Gets a list of all available requirements files.
+    /// </summary>
+    /// <returns>An array of available requirements file names.</returns>
+    public static string[] GetAvailableRequirementsFiles()
+    {
+        return RequirementsFiles;
+    }
+
+    /// <summary>
+    /// Displays the available requirements files to the console and prompts the user to select one.
+    /// </summary>
+    /// <returns>The selected requirements file name.</returns>
+    public static string SelectRequirementsFile()
+    {
+        Console.WriteLine("Available Requirements Files:");
+        Console.WriteLine("=============================");
+        
+        var files = GetAvailableRequirementsFiles();
+        for (int i = 0; i < files.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {files[i]}");
+        }
+        
+        Console.WriteLine();
+        Console.Write("Enter the number of the requirements file to use: ");
+        
+        while (true)
+        {
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out int selection) && selection >= 1 && selection <= files.Length)
+            {
+                var selectedFile = files[selection - 1];
+                Console.WriteLine($"Selected: {selectedFile}");
+                return selectedFile;
+            }
+            Console.Write($"Invalid selection. Please enter a number between 1 and {files.Length}: ");
+        }
+    }
+
+    /// <summary>
+    /// Loads the requirements from a specific file by filename.
+    /// </summary>
+    /// <param name="fileName">The name of the requirements file to load.</param>
+    /// <returns>The contents of the requirements file.</returns>
+    public static string LoadRequirementsFromFile(string fileName)
+    {
+        return LoadFromTextFile(fileName);
+    }
+
     public static string LoadRequirments(SystemNames systemName)
     {
         return systemName switch

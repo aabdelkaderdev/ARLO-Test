@@ -1,7 +1,7 @@
 # ARLO Project
 
 ## Overview
-ARLO is a C# project that converts software requirements into architectural decisions. Utilizing GPT-4 for parsing and an ILP-based optimizer for decision-making streamlines the architectural design process.
+ARLO is a C# project that converts software requirements into architectural decisions. Utilizing DeepSeek's deepseek-chat model for parsing and an ILP-based optimizer for decision-making streamlines the architectural design process.
 
 ## Key Components
 - **RequirementParser**: Parses natural language requirements into ASRs.
@@ -9,26 +9,53 @@ ARLO is a C# project that converts software requirements into architectural deci
 
 ## How to Use
 1. **Clone the Repository**: Access the code on GitHub.
-2. **Register your OpenAI Key**: See below.
+2. **Register your DeepSeek API Key**: See below.
 3. **Install Dependencies**: Follow the setup instructions for necessary libraries and tools.
-4. **Execute `CategorizedReqsExperiment`**: Configure and run the experiment with your system preferences.
-5. **Review Output**: Analyze the generated architectural decisions.
+4. **Run the Console Application**: The program will display available requirements files for selection.
+5. **Select a Requirements File**: Enter the number corresponding to your chosen requirements file.
+6. **Review Output**: Analyze the generated architectural decisions.
+
+## Interactive Requirements File Selection
+
+When you run the ARLO console application, you will be presented with a numbered list of available requirements files:
+
+```
+Available Requirements Files:
+=============================
+1. MessagingReqs.txt
+2. KaggleReq.txt
+3. ContradictoryReqs.txt
+4. AppFlowy.txt
+5. MLonBL.txt
+6. OfficerDispatcher.txt
+7. Bamboo.txt
+8. Mule.txt
+9. aptana.txt
+10. springxd.txt
+11. SmallMessagingSystem.txt
+
+Enter the number of the requirements file to use: 
+```
+
+Simply enter the number corresponding to the requirements file you want to analyze, and the program will process that file through the experiment.
 
 ## Contributing
 Contributions are welcome! Please take a look at our contributing guidelines for more information.
 
-### Setting Up Your OpenAI API Key on macOS
+### Setting Up Your DeepSeek API Key
 
-To use your OpenAI API key in a C# application, follow these steps to set up the environment variable on your Mac:
+ARLO uses the DeepSeek API for AI-powered requirement analysis. To set up your API key:
 
-1. **Open Terminal**: Open the Terminal application on your Mac.
+#### On macOS/Linux
+
+1. **Open Terminal**: Open the Terminal application.
 
 2. **Edit Shell Configuration File**:
     - Identify the shell you are using by running:
       ```sh
       echo $SHELL
       ```
-    - If you are using `bash` (default in many macOS versions), open the appropriate file:
+    - If you are using `bash`, open:
       ```sh
       nano ~/.bash_profile
       ```
@@ -44,9 +71,9 @@ To use your OpenAI API key in a C# application, follow these steps to set up the
 3. **Set the Environment Variable**:
     - Add the following line to the configuration file you opened:
       ```sh
-      export GptApiKey="your_openai_api_key_here"
+      export DeepSeekApiKey="your_deepseek_api_key_here"
       ```
-    - Replace `"your_openai_api_key_here"` with your actual OpenAI API key.
+    - Replace `"your_deepseek_api_key_here"` with your actual DeepSeek API key.
 
 4. **Save and Close the File**:
     - If you are using `nano`, save the file by pressing `CTRL + O`, then press `Enter` to confirm. Exit by pressing `CTRL + X`.
@@ -68,11 +95,34 @@ To use your OpenAI API key in a C# application, follow these steps to set up the
 6. **Verify the Environment Variable**:
     - Verify that the environment variable is set correctly by running:
       ```sh
-      echo $GptApiKey
+      echo $DeepSeekApiKey
       ```
-    - This should print your OpenAI API key to the terminal.
+    - This should print your DeepSeek API key to the terminal.
 
-Now, when you run your C# application, the environment variable `GptApiKey` should be available, and you can retrieve it using:
+#### On Windows
+
+1. **Open System Properties**: Right-click on "This PC" or "Computer" and select "Properties", then click "Advanced system settings".
+
+2. **Environment Variables**: Click the "Environment Variables" button.
+
+3. **Add New Variable**: Under "User variables" or "System variables", click "New" and add:
+    - Variable name: `DeepSeekApiKey`
+    - Variable value: `your_deepseek_api_key_here`
+
+4. **Apply Changes**: Click "OK" to save and close all dialogs.
+
+5. **Restart your IDE/Terminal**: You may need to restart your development environment for the changes to take effect.
+
+Now, when you run your C# application, the environment variable `DeepSeekApiKey` will be available, and the application will retrieve it using:
 
 ```csharp
-string apiKey = Environment.GetEnvironmentVariable("GptApiKey");
+string apiKey = Environment.GetEnvironmentVariable("DeepSeekApiKey");
+```
+
+## API Information
+
+ARLO uses the DeepSeek API with the following configuration:
+- **API Endpoint**: `https://api.deepseek.com/chat/completions`
+- **Model**: `deepseek-chat`
+
+**Note**: The embeddings functionality is not currently supported as DeepSeek does not provide an embeddings API. If you need embeddings functionality, consider using an alternative embeddings provider.
