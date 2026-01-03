@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ARLO Architectural Decision Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #333;
+            padding: 40px;
+        }
+        
+        h1 {
+            font-size: 24pt;
+            color: #1a365d;
+            border-bottom: 3px solid #3182ce;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 16pt;
+            color: #2c5282;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            font-size: 13pt;
+            color: #2d3748;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .header-info {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+        
+        .header-info p {
+            margin: 5px 0;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .summary-table th {
+            background: #edf2f7;
+            font-weight: 600;
+            width: 40%;
+        }
+        
+        .summary-table td {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #2c5282;
+        }
+        
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        table.data-table th {
+            background: #2c5282;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table.data-table td {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        
+        table.data-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        
+        .concern-box {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .concern-header {
+            font-weight: bold;
+            color: #276749;
+            margin-bottom: 10px;
+        }
+        
+        .score-badge {
+            display: inline-block;
+            background: #2c5282;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10pt;
+        }
+        
+        .quality-positive {
+            color: #276749;
+        }
+        
+        .quality-negative {
+            color: #c53030;
+        }
+        
+        .no-data {
+            color: #718096;
+            font-style: italic;
+        }
+        
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏗️ ARLO Architectural Decision Report</h1>
+    
+    <div class="header-info">
+        <p><strong>Generated:</strong> {{ generated_at }}</p>
+        <p><strong>Tool:</strong> ARLO - Architectural Requirements to Logical Optimization</p>
+    </div>
+    
+    <h2>📊 Requirements Summary</h2>
+    <table class="summary-table">
+        <tr>
+            <th>Total Requirements</th>
+            <td>{{ total_requirements }}</td>
+        </tr>
+        <tr>
+            <th>Architecturally-Significant (ASRs)</th>
+            <td>{{ asr_count }}</td>
+        </tr>
+        <tr>
+            <th>Condition Groups</th>
+            <td>{{ concern_count }}</td>
+        </tr>
+    </table>
+    
+    <h2>📋 Architecturally-Significant Requirements (ASRs)</h2>
+    {% if asrs %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 45%;">Description</th>
+                <th style="width: 25%;">Quality Attributes</th>
+                <th style="width: 25%;">Condition</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asr in asrs %}
+            <tr>
+                <td>{{ asr.id }}</td>
+                <td>{{ asr.description }}</td>
+                <td>{{ asr.quality_attributes }}</td>
+                <td>{{ asr.condition }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">No architecturally-significant requirements were identified.</p>
+    {% endif %}
+    
+    <h2>🎯 Architectural Decisions</h2>
+    {% if concerns %}
+        {% for concern in concerns %}
+        <div class="concern-box">
+            <div class="concern-header">
+                Concern {{ concern.index }}
+                {% if concern.conditions %}
+                    - {% for cond in concern.conditions %}{{ cond }}{% if not loop.last %}, {% endif %}{% endfor %}
+                {% endif %}
+            </div>
+            
+            <p><strong>Average Score:</strong> <span class="score-badge">{{ concern.average_score }}</span></p>
+            
+            {% if concern.desired_qualities %}
+            <p><strong>Desired Qualities:</strong> 
+                {% for quality, weight in concern.desired_qualities.items() %}
+                    {{ quality }} ({{ weight }}){% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
+            
+            <h3>Decisions</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pattern Type</th>
+                        <th>Selected Pattern</th>
+                        <th>Score</th>
+                        <th>Satisfied Qualities</th>
+                        <th>Tradeoffs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for decision in concern.decisions %}
+                    <tr>
+                        <td>{{ decision.pattern_type }}</td>
+                        <td><strong>{{ decision.selected_pattern }}</strong></td>
+                        <td><span class="score-badge">{{ decision.score }}</span></td>
+                        <td>
+                            {% if decision.satisfied %}
+                                {% for item in decision.satisfied %}
+                                    <span class="quality-positive">{{ item.quality }}({{ item.score }})</span>{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if decision.tradeoffs %}
+                                {% for item in decision.tradeoffs %}
+                                    <span class="quality-negative">{{ item.quality }}({{ item.score }})</span>{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    {% else %}
+    <p class="no-data">No architectural decisions were generated. This may indicate that no ASRs were identified.</p>
+    {% endif %}
+    
+</body>
+</html>
